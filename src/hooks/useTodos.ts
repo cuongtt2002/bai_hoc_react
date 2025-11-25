@@ -22,7 +22,7 @@ export const useTodos = () => {
         title,
         isCompleted: false,
       };
-      saveTodos([...todos, newTodo]);
+      saveTodos([newTodo, ...todos]);
     },
     [todos, saveTodos]
   );
