@@ -1,10 +1,16 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { HomePage } from "./pages/home/HomePage";
+import { LoadingDataProvider } from "./components/Loading/LoadingData";
+import { BrowserRouter } from "react-router-dom";
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
-)
+    <LoadingDataProvider>
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    </LoadingDataProvider>
+  </StrictMode>
+);
