@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import type { ITodo } from "../../utils/interface/todo";
 import { LoadingData } from "../Loading/LoadingData";
+import toast from "react-hot-toast";
 
 interface TodoItemProps {
   todo: ITodo;
@@ -19,36 +20,35 @@ export const TodoItem = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const trimmed = editTitle.trim();
     if (!trimmed) return;
 
     loadingContext?.show();
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      await onUpdate(todo.id, trimmed);
+      onUpdate(todo.id, trimmed);
+      toast.success("Todo updated successfully!");
       setIsEditing(false);
     } finally {
       loadingContext?.hide();
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     loadingContext?.show();
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      await onDelete(todo.id);
+      onDelete(todo.id);
+      toast.success("Todo deleted successfully!");
     } finally {
       loadingContext?.hide();
     }
   };
 
   return (
-    <div className="flex justify-between items-center p-2 border rounded mb-2">
-      <div className="flex items-center gap-2 flex-1">
+    <div className="flex gap-6 p-2 border rounded mb-2">
+      <div className="flex items-center gap-2 w-[70%]">
         <input
           type="checkbox"
           checked={todo.isCompleted}
@@ -62,14 +62,16 @@ export const TodoItem = ({
           />
         ) : (
           <span
-            className={todo.isCompleted ? "line-through text-gray-400" : ""}
+            className={`block break-words w-full ${
+              todo.isCompleted ? "line-through text-gray-400" : ""
+            }`}
           >
             {todo.title}
           </span>
         )}
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 col-span-1  w-[30%]">
         {isEditing ? (
           <button
             onClick={handleSave}

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { LoadingData } from "../Loading/LoadingData";
+import toast from "react-hot-toast";
 
 interface AddTodoFormProps {
   onAdd: (title: string) => void;
@@ -14,7 +15,7 @@ export const AddTodoForm = ({ onAdd }: AddTodoFormProps) => {
     inputRef.current?.focus();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = title.trim();
     if (!trimmed) return;
@@ -22,13 +23,11 @@ export const AddTodoForm = ({ onAdd }: AddTodoFormProps) => {
     loadingContext?.show();
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      await onAdd(trimmed);
+      onAdd(trimmed);
+      toast.success("Todo added successfully!");
     } finally {
       loadingContext?.hide();
     }
-
     setTitle("");
     inputRef.current?.focus();
   };

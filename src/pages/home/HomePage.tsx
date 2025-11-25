@@ -45,20 +45,18 @@ export const HomePage = () => {
     handleSearch();
   }, [debouncedSearch, todos]);
 
-  const fetchTodos = useCallback(async () => {
+  const fetchTodos = useCallback(() => {
     loadingContext?.show();
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      await loadTodos();
+      loadTodos();
     } finally {
       loadingContext?.hide();
     }
   }, [loadTodos, loadingContext]);
 
-  const handleSearch = useCallback(async () => {
+  const handleSearch = useCallback(() => {
     loadingContext?.show();
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
       const results = todos.filter((todo) =>
         debouncedSearch.trim() === ""
           ? true

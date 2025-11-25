@@ -10,50 +10,47 @@ export const useTodos = () => {
     setTodos(data);
   }, []);
 
-  const saveTodos = useCallback((newTodos: ITodo[]) => {
-    setTodos(newTodos);
-    todoService.save(newTodos);
+  const createTodo = useCallback((title: string) => {
+    const newTodo: ITodo = {
+      id: crypto.randomUUID(),
+      title,
+      isCompleted: false,
+    };
+
+    setTodos((prev) => {
+      const updated = [newTodo, ...prev];
+      todoService.save(updated);
+      return updated;
+    });
   }, []);
 
-  const createTodo = useCallback(
-    (title: string) => {
-      const newTodo: ITodo = {
-        id: crypto.randomUUID(),
-        title,
-        isCompleted: false,
-      };
-      saveTodos([newTodo, ...todos]);
-    },
-    [todos, saveTodos]
-  );
-
-  const updateTodo = useCallback(
-    (id: string, newTitle: string) => {
-      const updated = todos.map((todo) =>
+  const updateTodo = useCallback((id: string, newTitle: string) => {
+    setTodos((prev) => {
+      const updated = prev.map((todo) =>
         todo.id === id ? { ...todo, title: newTitle } : todo
       );
-      saveTodos(updated);
-    },
-    [todos, saveTodos]
-  );
+      todoService.save(updated);
+      return updated;
+    });
+  }, []);
 
-  const deleteTodo = useCallback(
-    (id: string) => {
-      const updated = todos.filter((todo) => todo.id !== id);
-      saveTodos(updated);
-    },
-    [todos, saveTodos]
-  );
+  const deleteTodo = useCallback((id: string) => {
+    setTodos((prev) => {
+      const updated = prev.filter((todo) => todo.id !== id);
+      todoService.save(updated);
+      return updated;
+    });
+  }, []);
 
-  const toggleCompleted = useCallback(
-    (id: string) => {
-      const updated = todos.map((todo) =>
+  const toggleCompleted = useCallback((id: string) => {
+    setTodos((prev) => {
+      const updated = prev.map((todo) =>
         todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
       );
-      saveTodos(updated);
-    },
-    [todos, saveTodos]
-  );
+      todoService.save(updated);
+      return updated;
+    });
+  }, []);
 
   return {
     todos,
